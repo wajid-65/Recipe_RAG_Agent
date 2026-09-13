@@ -1,0 +1,27 @@
+# Environments & Secret API Keys (IMPORTANT: Never commit API keys to GitHub!)
+.env
+*.env
+!.env.example
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+env/
+venv/
+ENV/
+
+# Node.js Dependencies
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+
+# Vector Database Index & Cache (Optional - build-index regenerates this)
+# faiss_index/
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

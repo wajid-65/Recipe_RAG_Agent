@@ -1,0 +1,12 @@
+langchain-core==1.6.2
+langchain-community==0.4.2
+langchain-text-splitters==1.1.2
+langchain-google-genai==4.4.0
+langgraph==1.2.11
+faiss-cpu
+pypdf
+unstructured
+tiktoken
+python-docx
+python-dotenv
+streamlit>=1.35.0

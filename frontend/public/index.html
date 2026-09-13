@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Marked Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🍳 Recipe Assistant</h2>
+            </div>
+
+            <div class="sidebar-action">
+                <button id="newChatBtn" class="btn btn-new-chat">+ New Conversation</button>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Popular Queries</h3>
+                <div class="popular-queries">
+                    <button class="query-btn" data-query="How do I make authentic Tamil Nadu Chettinad Chicken?">🍗 Chettinad Chicken</button>
+                    <button class="query-btn" data-query="How do I make authentic Tamil Nadu Sambar?">🍲 Tamil Nadu Sambar</button>
+                    <button class="query-btn" data-query="What can I cook with tofu and coconut milk?">🥥 Tofu & Coconut Curry</button>
+                    <button class="query-btn" data-query="How do I make British Fish and Chips?">🐟 Fish and Chips</button>
+                    <button class="query-btn" data-query="How do I make Kung Pao Chicken?">🥢 Kung Pao Chicken</button>
+                    <button class="query-btn" data-query="Give me a high-protein dinner recipe">🥗 High-Protein Dinner</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-viewport">
+            <header class="top-nav">
+                <div class="nav-title">
+                    <h1>Recipe Assistant Chatbot</h1>
+                </div>
+                <button id="clearChatBtn" class="btn btn-clear">Clear Chat</button>
+            </header>
+
+            <!-- Messages Window -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-box" id="welcomeBox">
+                    <h2>Welcome to Recipe Assistant! 👋</h2>
+                    <p>Ask any question about recipes, cooking steps, substitutions, or what to cook with ingredients you have on hand.</p>
+                </div>
+            </div>
+
+            <!-- Loading Status -->
+            <div class="loading-indicator hidden" id="loadingIndicator">
+                <div class="spinner"></div>
+                <span>Searching recipes and preparing answer...</span>
+            </div>
+
+            <!-- Input Form -->
+            <div class="input-area">
+                <form id="chatForm">
+                    <input type="text" id="userMessage" placeholder="Ask a recipe question..." required autocomplete="off" />
+                    <button type="submit" id="sendBtn">Send</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
