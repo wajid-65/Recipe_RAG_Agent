@@ -1,95 +1,130 @@
-# Recipe RAG Agent
+# 🍳 Recipe RAG Agent (Groq + LangChain + LangGraph + Web UI)
 
-A Document Q&A RAG agent that ingests recipe documents (PDFs, text/markdown
-notes, web pages) into a FAISS vector store, and answers cooking questions
-with personalization (diet, ingredients, time, cuisine), substitutions,
-nutrition estimates, shopping lists, and an HTML visual output.
+An intelligent **Retrieval-Augmented Generation (RAG) Recipe Assistant** built with **LangChain**, **LangGraph**, **Groq LLM (`openai/gpt-oss-20b`)**, local **HuggingFace Embeddings (`all-MiniLM-L6-v2`)**, **FAISS Vector Store**, **FastAPI**, and a **Node.js/Express Web Interface**.
 
-## Project Structure
+---
+
+## 🌟 Key Features
+
+- 🧠 **100% Grounded RAG Architecture:** Answers recipe questions strictly using retrieved knowledge from verified recipe documents to eliminate AI hallucinations.
+- ⚡ **Groq LLM Acceleration:** Powered by Groq's high-speed inference engine (`openai/gpt-oss-20b`) for sub-second responses.
+- 🛡️ **Free Local Embeddings:** Uses HuggingFace `sentence-transformers/all-MiniLM-L6-v2` locally on CPU—100% free, offline, and free of API rate limits (`429 errors`).
+- 🛠️ **6 Specialized Agent Tools:**
+  1. `RecipeRetriever`: Semantic FAISS vector search with source citations.
+  2. `WhatCanICook`: Matches & ranks recipes based on available household ingredients on hand.
+  3. `SubstitutionAdvisor`: Suggests culinary ingredient replacements.
+  4. `AdaptRecipe`: Dynamically rewrites recipes for dietary needs (vegan, gluten-free) or cooking time constraints.
+  5. `NutritionEstimator`: Calculates calorie and macro breakdowns per serving.
+  6. `ShoppingListGenerator`: Extracts structured grocery shopping lists.
+- 🌐 **Web Interface & Interactive Follow-Up Chips:** Includes a clean Node.js/Express web frontend with automatic follow-up question suggestions (e.g., *"Make this vegan"*, *"Show shopping list"*).
+- 💬 **Multi-Turn Conversational Memory:** Uses LangGraph checkpointers (`session_id`) to retain context across chat turns.
+
+---
+
+## 📂 Project Structure
 
 ```
 recipe_rag_agent/
 ├── data/
-│   ├── pdfs/              # drop cookbook / recipe PDFs here
-│   ├── text_notes/        # .txt / .md recipe notes (2 samples included)
-│   └── urls.txt           # one recipe blog URL per line
-├── faiss_index/           # generated FAISS index (created on first build)
-├── outputs/                # generated HTML visualizations
+│   ├── pdfs/              # Drop cookbook / recipe PDFs here
+│   └── text_notes/        # .txt / .md recipe notes (58 recipes included)
+├── faiss_index/           # Generated FAISS vector index (384-dim dense vectors)
+├── frontend/              # Node.js / Express Web Application
+│   ├── public/
+│   │   ├── index.html     # Simple HTML5 Chatbot UI
+│   │   ├── styles.css     # Clean CSS Stylesheet
+│   │   └── app.js         # Interactive Chat logic & follow-up suggestion chips
+│   ├── server.js          # Express Proxy Server (Port 3000)
+│   └── package.json
 ├── src/
-│   ├── config.py           # paths, model names, chunk sizes, tag vocab
-│   ├── metadata.py          # rule-based cuisine/diet/time tagging
-│   ├── ingest.py            # PDF / text / web loaders
-│   ├── chunking.py          # recipe-aware chunking + tagging
-│   ├── vectorstore.py       # FAISS build/load/merge + filtered search
-│   ├── tools.py             # retriever, ingredient-matcher, substitution,
-│   │                         # nutrition, shopping-list, adapt-recipe tools
-│   ├── agent.py             # history-aware retriever + tool-calling agent
-│   └── visualize.py         # renders agent output as a styled HTML page
-├── main.py                  # CLI entrypoint
-└── requirements.txt
+│   ├── config.py          # Central paths, retrieval Top-K, model configuration
+│   ├── metadata.py        # Rule-based cuisine, diet, and time metadata tagging
+│   ├── ingest.py          # PDF / text / web loaders
+│   ├── chunking.py        # Recipe-aware splitting (800-char chunks)
+│   ├── vectorstore.py     # FAISS build, load, and local HuggingFace embeddings
+│   ├── tools.py           # LangChain tools (Retriever, Pantry Matcher, Adaptor, etc.)
+│   └── agent.py           # LangGraph ReAct agent & memory checkpointer
+├── api.py                 # FastAPI Python REST Backend (Port 8000)
+├── main.py                # CLI Entrypoint (--build-index, --chat, --ask)
+├── .env.example           # Environment Template
+├── .gitignore             # Git ignore rules (protects API keys)
+└── requirements.txt       # Python dependencies
 ```
 
-## Setup
+---
 
+## 🛠️ Setup Instructions
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/wajid-65/Recipe_RAG_Agent.git
+cd Recipe_RAG_Agent
+```
+
+### 2. Install Python Dependencies
 ```bash
 pip install -r requirements.txt
-cp .env.example .env
-# edit .env and add your GOOGLE_API_KEY (from Google AI Studio: https://aistudio.google.com/apikey)
 ```
 
-## Usage
+### 3. Install Frontend Node.js Dependencies
+```bash
+cd frontend
+npm install
+cd ..
+```
 
-**1. Build the index** (reads everything under `data/`):
+### 4. Configure Environment Variables
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+Edit `.env` and add your free **Groq API Key** (Get one at [https://console.groq.com/keys](https://console.groq.com/keys)):
+```env
+GROQ_API_KEY=gsk_your_groq_api_key_here
+LLM_MODEL=openai/gpt-oss-20b
+```
+
+---
+
+## 🚀 Running the Application
+
+### 1. Build the FAISS Vector Index (First Time Only)
+Ingests all 58 recipes from `data/text_notes/` into the local FAISS vector store:
 ```bash
 python main.py --build-index
 ```
-Two sample recipes are already included (`chocolate_cake.md`,
-`vegan_thai_curry.md`) so you can test immediately without adding your own
-files.
 
-**2. Interactive chat** (multi-turn, remembers context):
+### 2. Run the Web Application
+
+#### Terminal 1 (Python FastAPI Backend):
+```bash
+uvicorn api:app --host 127.0.0.1 --port 8000
+```
+
+#### Terminal 2 (Node.js Express Web Server):
+```bash
+cd frontend
+node server.js
+```
+
+#### Open Web Browser:
+Go to 👉 **[http://localhost:3000](http://localhost:3000)**
+
+---
+
+## 🖥️ Running via Command Line (CLI Mode)
+
+You can also run interactive chat directly in your terminal:
 ```bash
 python main.py --chat
 ```
-Example session:
-```
-You: How do I make a sugar-free version of chocolate cake?
-Agent: ...
-You: Now make it gluten-free too
-Agent: ...   <- correctly resolves "it" using chat history
-```
 
-**3. Single question with HTML visualization:**
+Or ask a single-shot question:
 ```bash
-python main.py --ask "What can I cook with tofu, broccoli, and coconut milk?" --html
+python main.py --ask "How do I make authentic Tamil Nadu Chettinad Chicken?"
 ```
-Opens `outputs/recipe_output.html` in your browser for a styled step
-tracker, shopping checklist, and nutrition card.
 
-## What each requirement maps to
+---
 
-| Requirement | Implementation |
-|---|---|
-| Ingest & index recipe documents | `ingest.py` (PDF/text/web loaders) + `chunking.py` (recipe-aware splitting) + `vectorstore.py` (FAISS) |
-| Conversational Q&A | `agent.py` — `create_history_aware_retriever` rewrites follow-ups using chat history before retrieval |
-| Personalization (diet/ingredients/time/cuisine) | `metadata.py` tags chunks; `filtered_retrieve()` filters by them; `WhatCanICook` tool matches on available ingredients; `AdaptRecipe` tool rewrites for constraints |
-| Substitutions | `SubstitutionAdvisor` tool |
-| Nutrition facts | `NutritionEstimator` tool (structured JSON output) |
-| Shopping list | `ShoppingListGenerator` tool (structured JSON output) |
-| Visual step-by-step guidance | `visualize.py` renders an HTML page with numbered steps, checklist, nutrition card |
-| Grounding / hallucination guardrail | `retrieve_recipes()` and `what_can_i_cook()` answer ONLY from retrieved context and return an explicit `NO_MATCH` signal when nothing relevant is found |
-
-## Known limitations (be upfront about these if asked)
-
-- Uses Google Gemini (`gemini-3.6-flash` for chat, `models/gemini-embedding-001` for embeddings) via `langchain-google-genai` 4.x, built on Google's current unified SDK. Google's model lineup moves fast — if `LLM_MODEL` in `config.py` ever throws a 404 "no longer available" error, the error message itself will tell you the exact replacement model string; just swap it in. Check https://ai.google.dev/gemini-api/docs/models for the current lineup any time.
-- The agent is built with `langgraph.prebuilt.create_react_agent` (not the older `AgentExecutor`/`create_tool_calling_agent`, which LangChain removed in its 1.0 release). This also gets Gemini 3.x's required "thought signature" handling for multi-turn tool calls automatically — an older `langchain-google-genai` (built on Google's legacy SDK) can't do this and will error with `Function call is missing a thought_signature`.
-- FAISS doesn't support native metadata filtering, so `filtered_retrieve()`
-  over-fetches and filters in Python — fine at this scale, would need a
-  different vector DB (Qdrant/Chroma) for very large corpora.
-- Metadata tagging (`metadata.py`) is rule-based/regex, not LLM-based — fast
-  and free, but will miss cuisines/diets not in `KNOWN_CUISINES` /
-  `KNOWN_DIET_TAGS` in `config.py`. Extend those lists, or switch to the
-  `llm_tag_chunk()` stub for higher accuracy at ingestion cost.
-- Nutrition estimates are LLM-generated approximations, not verified against
-  a nutrition database — clearly labeled as such in the output.
-- No OCR — scanned/image-only PDFs will not extract text.
+## 📄 License
+MIT License
