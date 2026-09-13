@@ -1,27 +1,27 @@
-# 🍳 Recipe RAG Agent (Groq + LangChain + LangGraph + Web UI)
+# Recipe RAG Agent (Groq + LangChain + LangGraph + Web UI)
 
 An intelligent **Retrieval-Augmented Generation (RAG) Recipe Assistant** built with **LangChain**, **LangGraph**, **Groq LLM (`openai/gpt-oss-20b`)**, local **HuggingFace Embeddings (`all-MiniLM-L6-v2`)**, **FAISS Vector Store**, **FastAPI**, and a **Node.js/Express Web Interface**.
 
 ---
 
-## 🌟 Key Features
+##  Key Features
 
-- 🧠 **100% Grounded RAG Architecture:** Answers recipe questions strictly using retrieved knowledge from verified recipe documents to eliminate AI hallucinations.
-- ⚡ **Groq LLM Acceleration:** Powered by Groq's high-speed inference engine (`openai/gpt-oss-20b`) for sub-second responses.
-- 🛡️ **Free Local Embeddings:** Uses HuggingFace `sentence-transformers/all-MiniLM-L6-v2` locally on CPU—100% free, offline, and free of API rate limits (`429 errors`).
-- 🛠️ **6 Specialized Agent Tools:**
+- **100% Grounded RAG Architecture:** Answers recipe questions strictly using retrieved knowledge from verified recipe documents to eliminate AI hallucinations.
+-  **Groq LLM Acceleration:** Powered by Groq's high-speed inference engine (`openai/gpt-oss-20b`) for sub-second responses.
+-  **Free Local Embeddings:** Uses HuggingFace `sentence-transformers/all-MiniLM-L6-v2` locally on CPU—100% free, offline, and free of API rate limits (`429 errors`).
+-  **6 Specialized Agent Tools:**
   1. `RecipeRetriever`: Semantic FAISS vector search with source citations.
   2. `WhatCanICook`: Matches & ranks recipes based on available household ingredients on hand.
   3. `SubstitutionAdvisor`: Suggests culinary ingredient replacements.
   4. `AdaptRecipe`: Dynamically rewrites recipes for dietary needs (vegan, gluten-free) or cooking time constraints.
   5. `NutritionEstimator`: Calculates calorie and macro breakdowns per serving.
   6. `ShoppingListGenerator`: Extracts structured grocery shopping lists.
-- 🌐 **Web Interface & Interactive Follow-Up Chips:** Includes a clean Node.js/Express web frontend with automatic follow-up question suggestions (e.g., *"Make this vegan"*, *"Show shopping list"*).
-- 💬 **Multi-Turn Conversational Memory:** Uses LangGraph checkpointers (`session_id`) to retain context across chat turns.
+-  **Web Interface & Interactive Follow-Up Chips:** Includes a clean Node.js/Express web frontend with automatic follow-up question suggestions (e.g., *"Make this vegan"*, *"Show shopping list"*).
+-  **Multi-Turn Conversational Memory:** Uses LangGraph checkpointers (`session_id`) to retain context across chat turns.
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 recipe_rag_agent/
@@ -53,7 +53,7 @@ recipe_rag_agent/
 
 ---
 
-## 🛠️ Setup Instructions
+##  Setup Instructions
 
 ### 1. Clone the Repository
 ```bash
@@ -86,7 +86,7 @@ LLM_MODEL=openai/gpt-oss-20b
 
 ---
 
-## 🚀 Running the Application
+##  Running the Application
 
 ### 1. Build the FAISS Vector Index (First Time Only)
 Ingests all 58 recipes from `data/text_notes/` into the local FAISS vector store:
@@ -108,11 +108,11 @@ node server.js
 ```
 
 #### Open Web Browser:
-Go to 👉 **[http://localhost:3000](http://localhost:3000)**
+Go to  **[http://localhost:3000](http://localhost:3000)**
 
 ---
 
-## 🖥️ Running via Command Line (CLI Mode)
+##  Running via Command Line (CLI Mode)
 
 You can also run interactive chat directly in your terminal:
 ```bash
